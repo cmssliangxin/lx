@@ -1,0 +1,30 @@
+ssh root@172.25.10.9 -X
+setenforce 0
+[root@workstation ~]# firefox
+172.25.10.12/zabbix
+
+[root@serverd ~]# mysqldump -uroot -puplooking zabbix > /tmp/lx.sql
+MariaDB [(none)]> drop database zabbix;
+Query OK, 104 rows affected (0.35 sec)
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| test               |
++--------------------+
+4 rows in set (0.00 sec)
+
+MariaDB [(none)]> create database zabbix DEFAULT CHARACTER SET utf8;
+Query OK, 1 row affected (0.00 sec)
+
+flush privileges;
+exit
+sed -i 's/latin1/utf8/' lx.sql
+mysql -uroot -puplooking zabbix < lx.sql 
+systemctl restart mariadb
+
+
